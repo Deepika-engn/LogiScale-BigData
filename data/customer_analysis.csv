@@ -1,3 +1,3 @@
-Customer_Segment,Total_Shipments,On_Time_Rate
-Corporate,304,0.8651315789473685
-Individual,696,0.8290229885057471
+Customer_Segment,Total_Shipments,On_Time_Rate,Delayed_Shipments
+Corporate,304,0.8651315789473685,41
+Individual,696,0.8290229885057471,119

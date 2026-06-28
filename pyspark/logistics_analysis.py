@@ -20,7 +20,7 @@ df["Customer_Segment"] = df["Customer_Segment"].replace({
     "Kurumsal": "Corporate"
 })
 
-# Shipment Status (only if this column exists and contains Turkish values)
+# Shipment Status (only if this column exists)
 if "Shipment_Status" in df.columns:
     df["Shipment_Status"] = df["Shipment_Status"].replace({
         "Zamanında": "On Time",
@@ -68,54 +68,66 @@ print("On-Time %:", on_time_percent)
 # Route Analysis
 # -----------------------------
 
-route_analysis = df.groupby(
-    ["Origin_City", "Destination_City"]
-).agg(
-    Total_Shipments=("Shipment_ID", "count"),
-    On_Time_Rate=("On_Time", "mean")
+route_analysis = (
+    df.groupby(["Origin_City", "Destination_City"])
+      .agg(
+          Total_Shipments=("Shipment_ID", "count"),
+          On_Time_Rate=("On_Time", "mean"),
+          Delayed_Shipments=("On_Time", lambda x: (x == 0).sum())
+      )
+      .reset_index()
 )
 
 print("\n----- Route Analysis -----")
 print(route_analysis.head())
 
 route_analysis.to_csv(
-    "data/route_analysis.csv"
+    "data/route_analysis.csv",
+    index=False
 )
 
 # -----------------------------
 # Shipment Type Analysis
 # -----------------------------
 
-shipment_analysis = df.groupby(
-    "Shipment_Type"
-).agg(
-    Total_Shipments=("Shipment_ID", "count"),
-    On_Time_Rate=("On_Time", "mean")
+shipment_analysis = (
+    df.groupby("Shipment_Type")
+      .agg(
+          Total_Shipments=("Shipment_ID", "count"),
+          On_Time_Rate=("On_Time", "mean"),
+          Delayed_Shipments=("On_Time", lambda x: (x == 0).sum())
+      )
+      .reset_index()
 )
 
 print("\n----- Shipment Type Analysis -----")
 print(shipment_analysis)
 
 shipment_analysis.to_csv(
-    "data/shipment_analysis.csv"
+    "data/shipment_analysis.csv",
+    index=False
 )
 
 # -----------------------------
 # Customer Segment Analysis
 # -----------------------------
 
-customer_analysis = df.groupby(
-    "Customer_Segment"
-).agg(
-    Total_Shipments=("Shipment_ID", "count"),
-    On_Time_Rate=("On_Time", "mean")
+customer_analysis = (
+    df.groupby("Customer_Segment")
+      .agg(
+          Total_Shipments=("Shipment_ID", "count"),
+          On_Time_Rate=("On_Time", "mean"),
+          Delayed_Shipments=("On_Time", lambda x: (x == 0).sum())
+      )
+      .reset_index()
 )
 
 print("\n----- Customer Segment Analysis -----")
 print(customer_analysis)
 
 customer_analysis.to_csv(
-    "data/customer_analysis.csv"
+    "data/customer_analysis.csv",
+    index=False
 )
 
 print("\nAll files generated successfully!")
